@@ -1,0 +1,22 @@
+{
+  "name": "landing-template-gulp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prettify": "prettier src --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vmik7/landing-template-gulp.git"
+  },
+  "author": "vmik7 <vmik7@yandex.ru>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vmik7/landing-template-gulp/issues"
+  },
+  "homepage": "https://github.com/vmik7/landing-template-gulp#readme",
+  "devDependencies": {
+    "prettier": "^2.3.1"
+  }
+}
