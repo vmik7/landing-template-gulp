@@ -4,8 +4,8 @@ module.exports = {
         node: true,
         es2021: true,
     },
-    extends: ['airbnb', 'eslint:recommended'],
-    plugins: ['import', 'prettier'],
+    extends: ['airbnb', 'plugin:jsx-a11y/recommended', 'eslint:recommended'],
+    plugins: ['import', 'prettier', 'jsx-a11y'],
     parserOptions: {
         ecmaVersion: 12,
         sourceType: 'module',

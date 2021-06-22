@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engineStrict": true,
+  "engines": {
+    "node": "^14.17.0"
+  },
   "scripts": {
     "prettify": "prettier src --write",
     "lint": "eslint src --fix",
@@ -19,10 +23,27 @@
   },
   "homepage": "https://github.com/vmik7/landing-template-gulp#readme",
   "devDependencies": {
+    "browser-sync": "^2.26.14",
+    "del": "^6.0.0",
+    "dotenv": "^10.0.0",
     "eslint": "^7.29.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-file-include": "^2.3.0",
+    "gulp-group-css-media-queries": "^1.2.2",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-ttf2woff": "^1.1.1",
+    "gulp-ttf2woff2": "^4.0.1",
+    "gulp-uglify-es": "^2.0.0",
+    "gulp-webp": "^4.0.1",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.1"
@@ -30,5 +51,8 @@
   "lint-staged": {
     "*.js": "eslint --fix",
     "*.{js,css,md}": "prettier --write"
+  },
+  "dependencies": {
+    "node-sass": "^6.0.0"
   }
 }
