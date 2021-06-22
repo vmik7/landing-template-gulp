@@ -1,65 +1,42 @@
 require('dotenv').config();
 
-const ProjectFolder = 'dist';
-const SourceFolder = 'src';
-const PORT = process.env.PORT || 3000;
+const fsp = require('fs/promises');
+const path = require('path');
 
-const fs = require('fs');
-
-const Routes = {
-    src: {
-        html: [`${SourceFolder}/*.html`, `!${SourceFolder}/_*.html`],
-        css: [`${SourceFolder}/scss/style.scss`],
-        bem: `${SourceFolder}/scss/blocks/*.scss`,
-        js: `${SourceFolder}/js/main.js`,
-        images: `${SourceFolder}/img/**/*.{jpg,png,svg,gif,ico,webp}`,
-        fonts: `${SourceFolder}/fonts/*.ttf`,
-    },
-    build: {
-        html: `${ProjectFolder}/`,
-        css: `${ProjectFolder}/css/`,
-        js: `${ProjectFolder}/js/`,
-        images: `${ProjectFolder}/img/`,
-        fonts: `${ProjectFolder}/fonts/`,
-    },
-    watch: {
-        html: `${SourceFolder}/**/*.html`,
-        css: `${SourceFolder}/scss/**/*.scss`,
-        js: `${SourceFolder}/js/**/*.js`,
-        images: `${SourceFolder}/img/**/*.{ipg,png,svg,gif,ico,webp}`,
-    },
-    clean: `./${ProjectFolder}/`,
-};
-
+const { src, dest, watch, series, parallel } = require('gulp');
 const del = require('del');
 const browserSync = require('browser-sync').create();
-
-const gulp = require('gulp');
 const rename = require('gulp-rename');
-
 const fileInclude = require('gulp-file-include');
 
+// works with CSS
 const sass = require('gulp-sass');
 sass.compiler = require('node-sass');
 const groupMedia = require('gulp-group-css-media-queries');
 const autoprefixer = require('gulp-autoprefixer');
 const cleanCss = require('gulp-clean-css');
 
+// works with JS
 const uglify = require('gulp-uglify-es').default;
 
+// works with Images
 const imagemin = require('gulp-imagemin');
 const webp = require('gulp-webp');
 
-const ttf2woff = require('gulp-ttf2woff');
-const ttf2woff2 = require('gulp-ttf2woff2');
+// works with Fonts
+const ttf2woff = require('ttf2woff');
+const ttf2woff2 = require('ttf2woff2');
 
-const { src, dest } = gulp;
-function browserSyncFunction() {
+// routing
+const routes = require('./gulp/routes');
+
+// BrowserSync configuration
+function browserSyncConfig() {
     browserSync.init({
         server: {
-            baseDir: `./${ProjectFolder}/`,
+            baseDir: routes.buildFolderName,
         },
-        port: PORT,
+        port: process.env.PORT || 3000,
         notify: false,
         online: true,
     });
@@ -69,10 +46,10 @@ function browserSyncFunction() {
 
 function html() {
     return (
-        src(Routes.src.html)
+        src(routes.src.html)
             .pipe(fileInclude())
             // .pipe(webpHtml())
-            .pipe(dest(Routes.build.html))
+            .pipe(dest(routes.build.html))
             .pipe(browserSync.stream())
     );
 }
@@ -80,7 +57,7 @@ function html() {
 // * CSS
 
 function css() {
-    return src(Routes.src.css)
+    return src(routes.src.scss)
         .pipe(
             sass({
                 outputStyle: 'expanded',
@@ -93,14 +70,14 @@ function css() {
                 cascade: true,
             }),
         )
-        .pipe(dest(Routes.build.css))
+        .pipe(dest(routes.build.css))
         .pipe(
             rename({
                 extname: '.min.css',
             }),
         )
         .pipe(cleanCss())
-        .pipe(dest(Routes.build.css))
+        .pipe(dest(routes.build.css))
         .pipe(browserSync.stream());
 }
 
@@ -108,16 +85,16 @@ function css() {
 
 function js() {
     return (
-        src(Routes.src.js)
+        src(routes.src.js)
             // .pipe(fileInclude())
-            .pipe(dest(Routes.build.js))
+            .pipe(dest(routes.build.js))
             .pipe(uglify())
             .pipe(
                 rename({
                     extname: '.min.js',
                 }),
             )
-            .pipe(dest(Routes.build.js))
+            .pipe(dest(routes.build.js))
             .pipe(browserSync.stream())
     );
 }
@@ -125,14 +102,14 @@ function js() {
 // * Images
 
 function images() {
-    return src(Routes.src.images)
+    return src(routes.src.images)
         .pipe(
             webp({
                 quality: 70,
             }),
         )
-        .pipe(dest(Routes.build.images))
-        .pipe(src(Routes.src.images))
+        .pipe(dest(routes.build.images))
+        .pipe(src(routes.src.images))
         .pipe(
             imagemin({
                 progressive: true,
@@ -141,73 +118,103 @@ function images() {
                 optimizationLevel: 3, // 0..7
             }),
         )
-        .pipe(dest(Routes.build.images))
+        .pipe(dest(routes.build.images))
         .pipe(browserSync.stream());
 }
 
 // * Fonts
 
 function fonts() {
-    return src(Routes.src.fonts)
-        .pipe(ttf2woff())
-        .pipe(dest(Routes.build.fonts))
-        .pipe(src(Routes.src.fonts))
-        .pipe(ttf2woff2())
-        .pipe(dest(Routes.build.fonts));
+    return src(routes.src.fonts).pipe(dest(routes.build.fonts));
 }
-// function fontsStyle() {
-//     let fileContent = fs.readFileSync(sourceFolder + '/scss/_fonts.scss');
-//     if (fileContent == '') {
-//         fs.writeFile(sourceFolder + '/scss/_fonts.scss', '', () => {});
-//         return fs.readdir(path.build.fonts, function (err, items) {
-//             if (items) {
-//                 let currentFontname;
-//                 for (var i = 0; i < items.length; i++) {
-//                     let fontname = items[i].split('.');
-//                     fontname = fontname[0];
-//                     if (currentFontname != fontname) {
-//                         fs.appendFile(
-//                             sourceFolder + '/scss/_fonts.scss',
-//                             '@include font("' +
-//                                 fontname +
-//                                 '", "' +
-//                                 fontname +
-//                                 '", "400", "normal");\r\n',
-//                             cb,
-//                         );
-//                     }
-//                     currentFontname = fontname;
-//                 }
-//             }
-//         });
-//     }
-// }
 
+// Converting .ttf fonts to .woff and .woff2
+async function convertFonts() {
+    await fsp.mkdir(path.resolve(routes.prepare.fontsTo), {
+        recursive: true,
+    });
+
+    const allFiles = await fsp.readdir(routes.prepare.fontsFrom);
+    const ttfFiles = allFiles.filter(
+        (fileName) => path.extname(fileName) === '.ttf',
+    );
+
+    for (const fileName of ttfFiles) {
+        console.log(fileName, 'converting...');
+        try {
+            const content = await fsp.readFile(
+                path.resolve(routes.prepare.fontsFrom, fileName),
+            );
+            fsp.writeFile(
+                path.resolve(
+                    routes.prepare.fontsTo,
+                    `${path.basename(fileName, '.ttf')}.woff`,
+                ),
+                ttf2woff(content).toString(),
+            );
+            fsp.writeFile(
+                path.resolve(
+                    routes.prepare.fontsTo,
+                    `${path.basename(fileName, '.ttf')}.woff2`,
+                ),
+                ttf2woff2(content),
+            );
+        } catch (e) {
+            console.error(e);
+        }
+    }
+}
+
+// imports builded Fonts
+async function importFonts() {
+    const fontsFileName = path.resolve(
+        routes.srcFolderName,
+        'scss/_fonts.scss',
+    );
+    await fsp.writeFile(fontsFileName, '');
+
+    const files = await fsp.readdir(routes.prepare.fontsTo);
+    const fontNames = new Set(
+        files.map((current) => path.basename(current, path.extname(current))),
+    );
+    for (const font of fontNames) {
+        await fsp.appendFile(
+            fontsFileName,
+            `@include font("${font}", "${font}", "400", "normal");\r\n`,
+        );
+        console.log(font, 'included!');
+    }
+}
+
+async function prepareFonts() {
+    await convertFonts();
+    await importFonts();
+}
+
+// Monitors source failes to be changed
 function watchFiles() {
-    gulp.watch([Routes.watch.html], html);
-    gulp.watch([Routes.watch.css], css);
-    gulp.watch([Routes.watch.js], js);
-    gulp.watch([Routes.watch.images], images);
+    watch([routes.watch.html], html);
+    watch([routes.watch.css], css);
+    watch([routes.watch.js], js);
+    watch([routes.watch.images], images);
+    watch([routes.watch.fonts], fonts);
 }
 
+// Clean build directory
 function clean() {
-    return del(Routes.clean);
+    return del(routes.buildFolderName);
 }
 
-const build = gulp.series(
-    clean,
-    gulp.parallel(js, css, html, images, fonts),
-    // fontsStyle,
-);
-const watch = gulp.parallel(build, watchFiles, browserSyncFunction);
+const buildFunction = series(clean, parallel(js, css, html, images, fonts));
+const watchFunction = parallel(buildFunction, watchFiles, browserSyncConfig);
 
-module.exports = {
-    fonts,
-    images,
-    js,
-    css,
-    html,
-    build,
-    watch,
-    default: watch,
-};
+exports.build = buildFunction;
+exports.watch = watchFunction;
+exports.default = watchFunction;
+
+exports.html = html;
+exports.css = css;
+exports.js = js;
+exports.images = images;
+exports.fonts = fonts;
+exports.prepareFonts = prepareFonts;
