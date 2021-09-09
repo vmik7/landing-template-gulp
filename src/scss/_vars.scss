@@ -1,23 +1,21 @@
-/* mixins */
-
+// mixins
 @import './mixins';
 
-/* colors */
-
+// colors
 @import './colors';
 
+// color assigment
 $main-text-color: $black;
 $page-bg-color: $white;
 
-/* fonts */
-
+// fonts
 $main-font: 'Roboto', sans-serif;
 
-/* media */
-
+// layout
 $container-padding: 18;
 $max-container-width: 1170 + 2 * $container-padding;
 
+// media
 $md1: $max-container-width;
 $md2: 992;
 $md3: 768;

@@ -8,7 +8,8 @@
   },
   "license": "ISC",
   "scripts": {
-    "start": "gulp",
+    "start": "gulp watch",
+    "build": "gulp build",
     "deploy": "gulp deploy",
     "fonts": "gulp prepareFonts",
     "prettify": "prettier src --write",

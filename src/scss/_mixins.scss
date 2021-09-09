@@ -1,5 +1,4 @@
-/* Mixin for quick including fonts .woff and .woff2 */
-
+// Mixin for quick including fonts .woff and .woff2
 @mixin font($font_name, $file_name, $weight, $style) {
     @font-face {
         font-weight: #{$weight};
@@ -11,8 +10,7 @@
     }
 }
 
-/* visually-hidden class */
-
+// visually-hidden class
 @mixin visually-hidden() {
     position: absolute;
     width: 1px;
@@ -24,35 +22,30 @@
     clip: rect(0 0 0 0);
 }
 
-/* add custom outline */
-
+// add custom outline
 @mixin focus-outline() {
     outline: 3px solid $outline-color;
     outline-offset: 2px;
 }
 
-/* remove custom outline */
-
+// remove custom outline
 @mixin no-focus-outline() {
     outline: 0;
 }
 
-/* Transition mixin */
-
+// Transition mixin
 @mixin default-transition($properties) {
     transition: $properties 0.3s ease;
 }
 
-/* Elipsis for single line */
-
+// Elipsis for single line
 @mixin single-line-elipsis() {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-/* Elipsis for several lines */
-
+// Elipsis for several lines
 @mixin multi-line-elipsis($lines) {
     display: -webkit-box;
     -webkit-line-clamp: $lines;
