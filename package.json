@@ -1,38 +1,40 @@
 {
   "name": "landing-template-gulp",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "engineStrict": true,
-  "engines": {
-    "node": "^14.17.0"
+  "description": "template for easy layout",
+  "author": {
+    "name": "Ivan Mikerin",
+    "email": "vmik7@yandex.ru"
   },
+  "license": "ISC",
   "scripts": {
+    "start": "gulp",
+    "deploy": "gulp deploy",
+    "fonts": "gulp prepareFonts",
     "prettify": "prettier src --write",
     "eslint": "eslint src --fix",
     "stylelint": "stylelint src/**/*.scss --fix",
     "prepare": "husky install"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vmik7/landing-template-gulp.git"
+  "lint-staged": {
+    "*.js": "eslint --fix",
+    "*.{css,scss}": "stylelint --fix",
+    "*.md": "prettier --write"
   },
-  "author": "vmik7 <vmik7@yandex.ru>",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/vmik7/landing-template-gulp/issues"
+  "engineStrict": true,
+  "engines": {
+    "node": "^14.17.0"
   },
-  "homepage": "https://github.com/vmik7/landing-template-gulp#readme",
   "devDependencies": {
     "browser-sync": "^2.26.14",
     "del": "^6.0.0",
     "dotenv": "^10.0.0",
     "eslint": "^7.29.0",
-    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "gh-pages": "^3.2.3",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-clean-css": "^4.3.0",
@@ -47,6 +49,7 @@
     "lint-staged": "^11.0.0",
     "node-sass": "^6.0.0",
     "prettier": "^2.3.1",
+    "reset-css": "^5.0.1",
     "stylelint": "^13.13.1",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-rational-order": "^0.1.2",
@@ -56,11 +59,6 @@
     "stylelint-scss": "^3.19.0",
     "ttf2woff": "^2.0.2",
     "ttf2woff2": "^4.0.3"
-  },
-  "lint-staged": {
-    "*.js": "eslint --fix",
-    "*.{css,scss}": "stylelint --fix",
-    "*.{js,css,md}": "prettier --write"
   },
   "dependencies": {}
 }

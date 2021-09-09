@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 require('dotenv').config();
 
 const fsp = require('fs/promises');
@@ -26,6 +28,9 @@ const webp = require('gulp-webp');
 // works with Fonts
 const ttf2woff = require('ttf2woff');
 const ttf2woff2 = require('ttf2woff2');
+
+// works with deploy
+const ghpages = require('gh-pages');
 
 // routing
 const routes = require('./gulp/routes');
@@ -205,6 +210,14 @@ function clean() {
     return del(routes.buildFolderName);
 }
 
+// Deploy build to the gh-pages branch
+async function deploy() {
+    await ghpages.publish(routes.buildFolderName, {}, (res) => {
+        if (res.output) console.log(res.output);
+        if (res.message) throw res.message;
+    });
+}
+
 const buildFunction = series(clean, parallel(js, css, html, images, fonts));
 const watchFunction = parallel(buildFunction, watchFiles, browserSyncConfig);
 
@@ -218,3 +231,4 @@ exports.js = js;
 exports.images = images;
 exports.fonts = fonts;
 exports.prepareFonts = prepareFonts;
+exports.deploy = deploy;

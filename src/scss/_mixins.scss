@@ -1,4 +1,4 @@
-// Mixin for quick including fonts .woff and .woff2 in gulpfile.js
+/* Mixin for quick including fonts .woff and .woff2 */
 
 @mixin font($font_name, $file_name, $weight, $style) {
     @font-face {
@@ -11,7 +11,7 @@
     }
 }
 
-// Mixin for visually-hidden class
+/* visually-hidden class */
 
 @mixin visually-hidden() {
     position: absolute;
@@ -24,15 +24,38 @@
     clip: rect(0 0 0 0);
 }
 
-// Mixin for custom outline on focused elements
+/* add custom outline */
 
 @mixin focus-outline() {
     outline: 3px solid $outline-color;
     outline-offset: 2px;
 }
 
-// Mixin for remove custom outline
+/* remove custom outline */
 
 @mixin no-focus-outline() {
     outline: 0;
+}
+
+/* Transition mixin */
+
+@mixin default-transition($properties) {
+    transition: $properties 0.3s ease;
+}
+
+/* Elipsis for single line */
+
+@mixin single-line-elipsis() {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Elipsis for several lines */
+
+@mixin multi-line-elipsis($lines) {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

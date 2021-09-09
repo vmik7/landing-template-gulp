@@ -7,7 +7,9 @@ module.exports = {
     plugins: ['stylelint-order', 'stylelint-scss'],
     rules: {
         'at-rule-no-unknown': null,
-        'scss/at-rule-no-unknown': true,
         'no-empty-source': null,
+        'no-invalid-position-at-import-rule': null,
+        'block-no-empty': null,
+        'no-descending-specificity': null,
     },
 };

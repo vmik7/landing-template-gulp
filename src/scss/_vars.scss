@@ -1,0 +1,24 @@
+/* mixins */
+
+@import './mixins';
+
+/* colors */
+
+@import './colors';
+
+$main-text-color: $black;
+$page-bg-color: $white;
+
+/* fonts */
+
+$main-font: 'Roboto', sans-serif;
+
+/* media */
+
+$container-padding: 18;
+$max-container-width: 1170 + 2 * $container-padding;
+
+$md1: $max-container-width;
+$md2: 992;
+$md3: 768;
+$md4: 480;
